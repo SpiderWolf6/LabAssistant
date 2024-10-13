@@ -1,1 +1,1 @@
-chainlit run rag_llm.py
+web: chainlit run rag_llm.py
