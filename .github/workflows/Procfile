@@ -1,1 +1,1 @@
-web: chainlit run rag_llm.py --port=$PORT --headless
+web: chainlit run rag_llm.py --port=8000 --headless
