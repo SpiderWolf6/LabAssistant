@@ -1,0 +1,1 @@
+web: chainlit run rag_llm.py --port=$PORT --headless
