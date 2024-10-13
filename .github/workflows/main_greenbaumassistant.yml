@@ -51,4 +51,4 @@ jobs:
           app-name: 'GreenbaumAssistant'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
-          package: ./published  # Point to the published directory
+          package: .
