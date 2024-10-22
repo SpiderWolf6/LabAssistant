@@ -33,8 +33,8 @@ from oauth2client.service_account import ServiceAccountCredentials
 # store azure configuration in variables
 OPENAI_API_TYPE = "Azure"
 OPENAI_API_VERSION = "2024-06-01"
-OPENAI_API_BASE = "https://sm-chatbot.openai.azure.com/"
-OPENAI_API_KEY = "9afbddb3414f48358545acc11404fd9d"
+OPENAI_API_BASE = "https://mukhers-bot.openai.azure.com/"
+OPENAI_API_KEY = "6016468003df44fbbb605d619d653c04"
 DATA_PATH = "C:/Users/soham/Work/MSKCC/summer_2024/gen_ai/data/papers/"
 CHROMA_PATH = "chroma"
 ai_model = "gpt-35-turbo"
