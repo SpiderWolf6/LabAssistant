@@ -14,7 +14,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Expose the port your app will be accessible on (adjust if needed)
-EXPOSE 80
+EXPOSE 8000
 
 # Command to run the app (assuming rag_llm.py starts your app)
 CMD ["python", "rag_llm.py"]
