@@ -1,7 +1,9 @@
 # import necessary libraries
 import os
+from os import environ
 import io
 import sys
+import json
 import time
 import shutil
 import logging
@@ -26,6 +28,7 @@ from langchain.prompts.chat import (
 from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
 import PyPDF2
+from oauth2client.service_account import ServiceAccountCredentials
 
 # store azure configuration in variables
 OPENAI_API_TYPE = "Azure"
@@ -96,10 +99,37 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# Chroma database variable
+db = None
+
+
+def authenticate_with_service_account():
+    # Fetch service account JSON from environment (or use a local path for dev)
+    service_account_json = os.getenv("client_id")
+
+    # If the client secret JSON is available, parse it
+    if service_account_json:
+        credentials = json.loads(service_account_json)
+
+        # Define the scopes required for Google Drive access
+        scopes = ['https://www.googleapis.com/auth/drive']
+
+        # Create the credentials using the service account information
+        creds = ServiceAccountCredentials.from_json_keyfile_dict(credentials, scopes=scopes)
+
+        # Initialize GoogleAuth object and set it to use the service account credentials
+        gauth = GoogleAuth()
+        gauth.credentials = creds
+
+        # Create GoogleDrive instance
+        drive = GoogleDrive(gauth)
+        return drive
+
 
 # on chainlit run, implement following
 @cl.on_chat_start
 async def start():
+    global db
     print("started")
 
     # create empty list for storing context documents and id
@@ -122,9 +152,7 @@ async def start():
     )
 
     # Authenticate and initialize PyDrive
-    gauth = GoogleAuth()
-    gauth.LocalWebserverAuth()  # Authenticate
-    drive = GoogleDrive(gauth)
+    drive = authenticate_with_service_account()
 
     # commented out, but use the two lines below to remove existing chroma if needed
     # if os.path.exists(CHROMA_PATH):
@@ -147,6 +175,9 @@ async def start():
         folder_id = '1RiuJcPnhA81rcNiJInnHE_FmoxcDJMkT'  # Replace with the actual folder ID
         file_list = drive.ListFile({'q': f"'{folder_id}' in parents and mimeType='application/pdf'"}).GetList()
 
+        print(folder_id)
+        print(file_list)
+
         # Iterate through and process each PDF file
         for file in file_list:
             print(f'Downloading {file["title"]}')
@@ -165,9 +196,9 @@ async def start():
                     )]
                     ids += [file['title'] + " section " + str(page_num)]
 
-            db = Chroma.from_documents(
-                documents, embeddings, persist_directory=CHROMA_PATH, ids=ids
-            )
+        db = Chroma.from_documents(
+            documents, embeddings, persist_directory=CHROMA_PATH, ids=ids
+        )
     # if ids exist, search for unique (new) ids and add only those documents to existing chromadb
     else:
         new_documents = []
