@@ -1,5 +1,9 @@
 # Use a lightweight Python base image
-FROM python:3.9-slim
+FROM python:3.10-slim
+
+RUN useradd -m -u 1000 user
+USER user
+ENV PATH="/home/user/.local/bin:$PATH"
 
 # Set the working directory inside the container
 WORKDIR /app
@@ -17,4 +21,4 @@ COPY . .
 EXPOSE 8000
 
 # Command to run the app (assuming rag_llm.py starts your app)
-CMD ["python", "rag_llm.py"]
+CMD ["chainlit", "run", "rag_llm.py", "--port", "8000"]
