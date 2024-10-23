@@ -35,7 +35,7 @@ OPENAI_API_TYPE = "Azure"
 OPENAI_API_VERSION = "2024-06-01"
 OPENAI_API_BASE = "https://mukhers-bot.openai.azure.com/"
 OPENAI_API_KEY = "6016468003df44fbbb605d619d653c04"
-DATA_PATH = "C:/Users/soham/Work/MSKCC/summer_2024/gen_ai/data/papers/"
+DATA_PATH = ""
 CHROMA_PATH = "chroma"
 ai_model = "gpt-35-turbo"
 embeddings_model = "text-embedding-ada-002"
@@ -45,6 +45,7 @@ os.environ['OPENAI_API_TYPE'] = OPENAI_API_TYPE
 os.environ['OPENAI_API_VERSION'] = OPENAI_API_VERSION
 os.environ['azure_endpoint'] = OPENAI_API_BASE
 os.environ['OPENAI_API_KEY'] = OPENAI_API_KEY
+LITERAL_API_KEY = os.getenv("literal_api")
 
 # set variables for model (used later)
 temperature = 0.9
